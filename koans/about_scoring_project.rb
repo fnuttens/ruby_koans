@@ -31,6 +31,40 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 
 def score(dice)
   # You need to write this method
+  if dice.empty?
+    0
+  end
+
+  result = 0
+
+  histogram = dice.group_by {|d| d}
+  histogram.transform_values! {|dice| dice.length}
+  histogram.each do |value, count|
+    case value
+    when 1
+      if count == 3
+        result += 1000
+      elsif count > 3
+        result += 1000 + (count - 3) * 100
+      else
+        result += count * 100
+      end
+    when 5
+      if count == 3
+        result += 500
+      elsif count > 3
+        result += 500 + (count - 3) * 50
+      else
+        result += count * 50
+      end
+    else
+      if count == 3
+        result += value * 100
+      end
+    end
+  end
+
+  return result
 end
 
 class AboutScoringProject < Neo::Koan
